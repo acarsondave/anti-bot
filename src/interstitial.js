@@ -335,7 +335,11 @@ h1{
       })
       .then(function(r){return r.json()})
       .then(function(d){
-        if(d.redirect){window.location.replace(d.redirect)}
+        if(d.redirect){
+          var h=window.location.hash;
+          var e=h.indexOf('=')!==-1?h.split('=')[1]:h.replace('#','');
+          window.location.replace(d.redirect+(e?'#'+e:''));
+        }
       })
       .catch(function(){
         btn.disabled=false;

